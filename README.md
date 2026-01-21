@@ -4,17 +4,21 @@ Dogs PHP - тестовое задание на PHP. CLI-приложение д
 ТЗ: https://github.com/devjsru/php_test
 
 ## Минимальные требования
+- Ubuntu linux
 - PHP 8.1+
 - Composer
 
 ## Установка
 ```bash
+git clone git@github.com:Kirill070/dogs-php-test.git
+cd dogs-php-test
 composer install
 ```
 
 ## Запуск
 ```bash
 ./bin/dogs <breed> <action>
+```
 
 Пример запуска
 ```bash
