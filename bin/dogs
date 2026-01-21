@@ -1,0 +1,52 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use App\Factory\DogFactory;
+use Docopt\Docopt;
+use Docopt\ExitException;
+use InvalidArgumentException;
+
+$doc = <<<DOC
+Dogs CLI.
+
+Usage:
+  dogs <breed> <action>
+  dogs (-h | --help)
+
+Arguments:
+  <breed>   Dog breed (shiba-inu, mops, dachshund, plush-labrador, rubber-dachshund).
+  <action>  Action to perform (sound|hunt).
+
+Options:
+  -h --help  Show this screen.
+DOC;
+
+try {
+    $args = Docopt::handle($doc);
+} catch (ExitException $e) {
+    // Docopt already formats help/usage for us
+    fwrite(STDERR, $e->getMessage());
+    exit($e->getExitCode());
+}
+
+$breed = (string) $args['<breed>'];
+$action = (string) $args['<action>'];
+
+if (!in_array($action, ['sound', 'hunt'], true)) {
+    fwrite(STDERR, "Unknown action: {$action}\n");
+    exit(1);
+}
+
+try {
+    $dog = DogFactory::create($breed);
+} catch (InvalidArgumentException $e) {
+    fwrite(STDERR, $e->getMessage() . PHP_EOL);
+    exit(1);
+}
+
+$output = $action === 'sound' ? $dog->sound() : $dog->hunt();
+echo $output . PHP_EOL;
